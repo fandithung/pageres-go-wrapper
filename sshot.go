@@ -19,6 +19,7 @@ type Parameters struct {
 	Timeout   string //Number of seconds after which PhantomJS aborts the request.
 	Filename  string //Define a customized filename. For example <%= date %> - <%= url %>-<%= size %><%= crop %>.
 	UserAgent string //Custom user agent.
+	Format    string //Image format: png or jpg
 }
 
 //GetShots starts pageres process itself and returns URL if Pageres Couldn't load url.
@@ -50,6 +51,7 @@ func runShotClient(urls []string, params Parameters) string {
 		params.Scale,
 		params.Timeout,
 		params.Filename,
+		params.Format,
 	)
 	cmd := exec.Command(command, args...)
 	var out bytes.Buffer
