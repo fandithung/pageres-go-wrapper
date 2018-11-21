@@ -10,13 +10,13 @@ func TestGetSShot(t *testing.T) {
 	shotsDir := "shots"
 	os.Mkdir(shotsDir, 0777)
 	params := Parameters{
-		Command:   "pageres",
 		Sizes:     "1024x768",
-		Crop:      "--crop",
-		Scale:     "--scale 0.9",
-		Timeout:   "--timeout 30",
-		Filename:  fmt.Sprintf(`--filename=%s/<%%= url %%>`, shotsDir),
+		Crop:      true,
+		Scale:     "0.9",
+		Timeout:   "30",
+		Filename:  fmt.Sprintf(`%s/<%%= url %%>`, shotsDir),
 		UserAgent: "",
+		Format:    "jpg",
 	}
 	urls := []string{
 		"http://google.com",

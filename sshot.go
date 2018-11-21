@@ -12,9 +12,9 @@ import (
 //Parameters struct serves for passing parameters for pageres
 //Read more information about parameters at https://github.com/sindresorhus/pageres
 type Parameters struct {
-	Command   string //pageres
+	Command   string
 	Sizes     string //Use a <width>x<height> notation or a keyword.
-	Crop      string //Crop to the set height. add --crop to args
+	Crop      bool   //Crop to the set height. add --crop to args if set to true
 	Scale     string //Scale webpage n times.
 	Timeout   string //Number of seconds after which PhantomJS aborts the request.
 	Filename  string //Define a customized filename. For example <%= date %> - <%= url %>-<%= size %><%= crop %>.
@@ -41,18 +41,14 @@ func GetShots(urls []string, params Parameters) {
 }
 
 func runShotClient(urls []string, params Parameters) string {
-	var args []string
-	command := params.Command
+	command := "pageres"
+	if params.Command != "" {
+		command = params.Command
+	}
+
 	//pageres http://google.com https://dbconvert.com '480x320' --crop --scale 0.9 --filename 'media/shots/<%= url %>'
-	args = append(
-		urls,
-		params.Sizes,
-		params.Crop,
-		params.Scale,
-		params.Timeout,
-		params.Filename,
-		params.Format,
-	)
+	args := buildArgs(urls, params)
+
 	cmd := exec.Command(command, args...)
 	var out bytes.Buffer
 	var stderr bytes.Buffer
@@ -68,6 +64,41 @@ func runShotClient(urls []string, params Parameters) string {
 		}
 	}
 	return ""
+}
+
+// build pageres-cli args
+func buildArgs(urls []string, params Parameters) []string {
+	args := urls
+
+	if params.Sizes != "" {
+		args = append(args, params.Sizes)
+	}
+
+	if params.Crop {
+		args = append(args, "--crop")
+	}
+
+	if params.Scale != "" {
+		args = append(args, "--scale="+params.Scale)
+	}
+
+	if params.Timeout != "" {
+		args = append(args, "--timeout="+params.Timeout)
+	}
+
+	if params.Filename != "" {
+		args = append(args, "--filename="+params.Filename)
+	}
+
+	if params.UserAgent != "" {
+		args = append(args, "--user-agent="+params.UserAgent)
+	}
+
+	if params.Format != "" {
+		args = append(args, "--format="+params.Format)
+	}
+
+	return args
 }
 
 //getBadURLFromErr gets url from stderr.String()
