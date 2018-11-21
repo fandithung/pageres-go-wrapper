@@ -20,6 +20,7 @@ type Parameters struct {
 	Filename  string //Define a customized filename. For example <%= date %> - <%= url %>-<%= size %><%= crop %>.
 	UserAgent string //Custom user agent.
 	Format    string //Image format: png or jpg
+	Overwrite bool   //Will overwrite existing screenshot file if set to true
 }
 
 //GetShots starts pageres process itself and returns URL if Pageres Couldn't load url.
@@ -96,6 +97,10 @@ func buildArgs(urls []string, params Parameters) []string {
 
 	if params.Format != "" {
 		args = append(args, "--format="+params.Format)
+	}
+
+	if params.Overwrite {
+		args = append(args, "--overwrite")
 	}
 
 	return args

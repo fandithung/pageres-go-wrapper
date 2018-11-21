@@ -17,6 +17,7 @@ func TestGetSShot(t *testing.T) {
 		Filename:  fmt.Sprintf(`%s/<%%= url %%>`, shotsDir),
 		UserAgent: "",
 		Format:    "jpg",
+		Overwrite: true,
 	}
 	urls := []string{
 		"http://google.com",
